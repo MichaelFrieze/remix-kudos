@@ -46,3 +46,11 @@ npx prisma db push
 ```bash
 npx prisma studio
 ```
+
+## ENV example
+
+`.env`
+
+```
+DATABASE_URL=""
+```
