@@ -53,7 +53,7 @@ This command is used to open prisma studio in the browser:
 npx prisma studio
 ```
 
-This command generates assets like Prisma Client (I ran this after updating Prisma schema):
+This command generates assets like Prisma Client (Use db push if new collection/model is created in Prisma schema):
 
 ```bash
 npx prisma generate
@@ -74,4 +74,4 @@ SESSION_SECRET=""
 ## Where I am at in the video:
 
 [Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=Mx9Xsq9JNXo)
-4:00
+21:00

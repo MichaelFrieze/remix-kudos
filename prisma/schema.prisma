@@ -12,14 +12,54 @@ datasource db {
 
 model User {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  profile   Profile
+  email     String   @unique
+  password  String
+
+  authoredKudos Kudo[]  @relation("AuthoredKudos")
+  kudos         Kudo[]  @relation("RecievedKudos")
+  profile       Profile
+}
+
+model Kudo {
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt   DateTime   @default(now())
+  style       KudoStyle?
+  author      User       @relation(references: [id], fields: [authorId], "AuthoredKudos")
+  authorId    String     @db.ObjectId
+  recipient   User       @relation(references: [id], fields: [recipientId], "RecievedKudos")
+  recipientId String     @db.ObjectId
 }
 
 type Profile {
   firstName String
   lastName  String
+}
+
+type KudoStyle {
+  backgroundColor Color @default(YELLOW)
+  textColor       Color @default(WHITE)
+  emoji           Emoji @default(THUMBSUP)
+}
+
+enum Emoji {
+  THUMBSUP
+  PARTY
+  HANDSUP
+}
+
+enum Department {
+  MARKETING
+  SALES
+  ENGINEERING
+  HR
+}
+
+enum Color {
+  RED
+  GREEN
+  YELLOW
+  BLUE
+  WHITE
 }
