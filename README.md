@@ -64,7 +64,11 @@ npx prisma generate
 `.env`
 
 ```
+# MongoDB URL
 DATABASE_URL=""
+
+# This can be anything you want
+SESSION_SECRET=""
 ```
 
 ## Where I am at in the video:
