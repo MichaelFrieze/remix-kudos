@@ -1,15 +1,25 @@
-import type { LoaderFunction } from '@remix-run/node';
+import { json, LoaderFunction } from '@remix-run/node';
+import { useLoaderData } from '@remix-run/react';
 import { requireUserId } from '~/utils/auth.server';
+import { Layout } from '~/components/layout';
+import { UserPanel } from '~/components/user-panel';
+import { getOtherUsers } from '~/utils/user.server';
 
-// export const loader: LoaderFunction = async ({ request }) => {
-//   await requireUserId(request);
-//   return null;
-// };
+export const loader: LoaderFunction = async ({ request }) => {
+  const userId = await requireUserId(request);
+  const users = await getOtherUsers(userId);
+
+  return json({ users });
+};
 
 export default function Home() {
+  const { users } = useLoaderData();
+
   return (
-    <div className="h-screen w-full bg-slate-600">
-      <h2 className="font-bold text-5xl text-blue-400">Home Route!</h2>
-    </div>
+    <Layout>
+      <div className="h-full flex">
+        <UserPanel users={users} />
+      </div>
+    </Layout>
   );
 }
