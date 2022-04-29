@@ -24,54 +24,41 @@ const storage = createCookieSessionStorage({
   },
 });
 
-export const register = async (form: RegisterForm) => {
-  const exists = await prisma.user.count({ where: { email: form.email } });
-
+export async function register(user: RegisterForm) {
+  const exists = await prisma.user.count({ where: { email: user.email } });
   if (exists) {
     return json(
-      { error: 'User already exists with that email' },
+      { error: `User already exists with that email` },
       { status: 400 }
     );
   }
 
-  const newUser = await createUser(form);
-
+  const newUser = await createUser(user);
   if (!newUser) {
     return json(
       {
-        error: 'Something went wrong trying to create a new user.',
-        fields: {
-          email: form.email,
-          password: form.password,
-        },
-      },
-      {
-        status: 400,
-      }
-    );
-  }
-
-  return createUserSession(newUser.id, '/');
-};
-
-export const login = async (form: LoginForm) => {
-  const user = await prisma.user.findUnique({
-    where: { email: form.email },
-  });
-
-  if (!user || !(await bcrypt.compare(form.password, user.password))) {
-    return json(
-      {
-        error: 'Incorrect login',
+        error: `Something went wrong trying to create a new user.`,
+        fields: { email: user.email, password: user.password },
       },
       { status: 400 }
     );
   }
+  return createUserSession(newUser.id, '/');
+}
+
+// Validate the user on email & password
+export async function login({ email, password }: LoginForm) {
+  const user = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (!user || !(await bcrypt.compare(password, user.password)))
+    return json({ error: `Incorrect login` }, { status: 400 });
 
   return createUserSession(user.id, '/');
-};
+}
 
-export const createUserSession = async (userId: string, redirectTo: string) => {
+export async function createUserSession(userId: string, redirectTo: string) {
   const session = await storage.getSession();
   session.set('userId', userId);
   return redirect(redirectTo, {
@@ -79,4 +66,4 @@ export const createUserSession = async (userId: string, redirectTo: string) => {
       'Set-Cookie': await storage.commitSession(session),
     },
   });
-};
+}
