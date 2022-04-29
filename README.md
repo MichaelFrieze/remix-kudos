@@ -35,16 +35,28 @@ If you're used to using the `vercel dev` command provided by [Vercel CLI](https:
 
 ## Prisma Commands
 
+This command is used for initial Prisma setup:
+
 ```bash
 npx prisma init --datasource-provider mongodb
 ```
+
+This is used to synchronize the Prisma schema with the database schema for prototyping:
 
 ```bash
 npx prisma db push
 ```
 
+This command is used to open prisma studio in the browser:
+
 ```bash
 npx prisma studio
+```
+
+This command generates assets like Prisma Client (I ran this after updating Prisma schema):
+
+```bash
+npx prisma generate
 ```
 
 ## ENV example
