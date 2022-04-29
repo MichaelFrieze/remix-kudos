@@ -29,7 +29,7 @@ export const register = async (form: RegisterForm) => {
 
   if (exists) {
     return json(
-      { authError: 'User already exists with that email' },
+      { error: 'User already exists with that email' },
       { status: 400 }
     );
   }
@@ -39,7 +39,7 @@ export const register = async (form: RegisterForm) => {
   if (!newUser) {
     return json(
       {
-        authError: 'Something went wrong trying to create a new user.',
+        error: 'Something went wrong trying to create a new user.',
         fields: {
           email: form.email,
           password: form.password,
@@ -62,7 +62,7 @@ export const login = async (form: LoginForm) => {
   if (!user || !(await bcrypt.compare(form.password, user.password))) {
     return json(
       {
-        authError: 'Incorrect login',
+        error: 'Incorrect login',
       },
       { status: 400 }
     );

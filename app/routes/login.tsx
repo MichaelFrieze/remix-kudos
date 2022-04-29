@@ -34,7 +34,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ error: 'Invalid form data', form: action }, { status: 400 });
   }
 
-  const errors = {
+  const fieldErrors = {
     email: validateEmail(email),
     password: validatePassword(password),
     ...(action === 'register'
@@ -45,10 +45,10 @@ export const action: ActionFunction = async ({ request }) => {
       : {}),
   };
 
-  if (Object.values(errors).some(Boolean)) {
+  if (Object.values(fieldErrors).some(Boolean)) {
     return json(
       {
-        errors,
+        fieldErrors,
         fields: {
           email,
           password,
@@ -77,8 +77,8 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const actionData = useActionData();
-  const [authError, setAuthError] = useState(actionData?.authError || '');
-  const [fieldErrors, setFieldErrors] = useState(actionData?.errors || {});
+  const [error, setError] = useState(actionData?.error || '');
+  const [fieldErrors, setFieldErrors] = useState(actionData?.fieldErrors || {});
   const [action, setAction] = useState('login');
   const [formData, setFormData] = useState({
     email: '',
@@ -120,7 +120,7 @@ export default function Login() {
 
         <form method="post" className="rounded-2xl bg-gray-200 p-6 w-96">
           <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
-            {authError}
+            {error}
           </div>
 
           <FormField
