@@ -1,6 +1,6 @@
 import { Layout } from '~/components/layout';
 import { FormField } from '~/components/form-field';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useActionData } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { ActionFunction } from '@remix-run/node';
@@ -77,7 +77,7 @@ export const action: ActionFunction = async ({ request }) => {
 
 export default function Login() {
   const actionData = useActionData();
-  const [error, setError] = useState(actionData?.error || '');
+  const [formError, setFormError] = useState(actionData?.error || '');
   const [fieldErrors, setFieldErrors] = useState(actionData?.fieldErrors || {});
   const [action, setAction] = useState('login');
   const [formData, setFormData] = useState({
@@ -86,6 +86,8 @@ export default function Login() {
     firstName: '',
     lastName: '',
   });
+
+  const firstLoad = useRef(true);
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -97,7 +99,31 @@ export default function Login() {
     }));
   };
 
-  console.log(actionData);
+  useEffect(() => {
+    // Clear the form if we switch forms
+    if (!firstLoad.current) {
+      const newState = {
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+      };
+      setFieldErrors(newState);
+      setFormError('');
+      setFormData(newState);
+    }
+  }, [action]);
+
+  useEffect(() => {
+    if (!firstLoad.current) {
+      setFormError('');
+    }
+  }, [formData]);
+
+  useEffect(() => {
+    // We don't want to reset errors on page load because we want to see them
+    firstLoad.current = false;
+  }, []);
 
   return (
     <Layout>
@@ -120,7 +146,7 @@ export default function Login() {
 
         <form method="post" className="rounded-2xl bg-gray-200 p-6 w-96">
           <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
-            {error}
+            {formError}
           </div>
 
           <FormField
