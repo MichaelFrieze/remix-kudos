@@ -1,6 +1,7 @@
 import { Layout } from '~/components/layout';
 import { FormField } from '~/components/form-field';
 import { useState } from 'react';
+import { useActionData } from '@remix-run/react';
 import { json } from '@remix-run/node';
 import type { ActionFunction } from '@remix-run/node';
 import {
@@ -75,6 +76,9 @@ export const action: ActionFunction = async ({ request }) => {
 };
 
 export default function Login() {
+  const actionData = useActionData();
+  const [authError, setAuthError] = useState(actionData?.authError || '');
+  const [fieldErrors, setFieldErrors] = useState(actionData?.errors || {});
   const [action, setAction] = useState('login');
   const [formData, setFormData] = useState({
     email: '',
@@ -92,6 +96,8 @@ export default function Login() {
       [field]: event.target.value,
     }));
   };
+
+  console.log(actionData);
 
   return (
     <Layout>
@@ -113,6 +119,10 @@ export default function Login() {
         </p>
 
         <form method="post" className="rounded-2xl bg-gray-200 p-6 w-96">
+          <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
+            {authError}
+          </div>
+
           <FormField
             htmlFor="email"
             label="Email"
