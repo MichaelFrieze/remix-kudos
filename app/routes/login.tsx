@@ -128,6 +128,7 @@ export default function Login() {
             label="Email"
             value={formData.email}
             onChange={(e) => handleInputChange(e, 'email')}
+            error={fieldErrors?.email}
           />
 
           <FormField
@@ -136,6 +137,7 @@ export default function Login() {
             type="password"
             value={formData.password}
             onChange={(e) => handleInputChange(e, 'password')}
+            error={fieldErrors?.password}
           />
 
           {action !== 'login' ? (
@@ -145,6 +147,7 @@ export default function Login() {
                 label="First Name"
                 value={formData.firstName}
                 onChange={(e) => handleInputChange(e, 'firstName')}
+                error={fieldErrors?.firstName}
               />
 
               <FormField
@@ -152,6 +155,7 @@ export default function Login() {
                 label="Last Name"
                 value={formData.lastName}
                 onChange={(e) => handleInputChange(e, 'lastName')}
+                error={fieldErrors?.lastName}
               />
             </>
           ) : null}
