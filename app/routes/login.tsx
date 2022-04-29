@@ -31,6 +31,33 @@ export const action: ActionFunction = async ({ request }) => {
   ) {
     return json({ error: 'Invalid form data', form: action }, { status: 400 });
   }
+
+  const errors = {
+    email: validateEmail(email),
+    password: validatePassword(password),
+    ...(action === 'register'
+      ? {
+          firstName: validateName((firstName as string) || ''),
+          lastName: validateName((lastName as string) || ''),
+        }
+      : {}),
+  };
+
+  if (Object.values(errors).some(Boolean)) {
+    return json(
+      {
+        errors,
+        fields: {
+          email,
+          password,
+          firstName,
+          lastName,
+        },
+        form: action,
+      },
+      { status: 400 }
+    );
+  }
 };
 
 export default function Login() {
