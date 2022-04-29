@@ -2,9 +2,6 @@ import { Layout } from '~/components/layout';
 import { FormField } from '~/components/form-field';
 import { useState } from 'react';
 
-// 24:40
-// https://www.youtube.com/watch?v=vR33ZRJekHk
-
 export default function Login() {
   const [action, setAction] = useState('login');
   const [formData, setFormData] = useState({
