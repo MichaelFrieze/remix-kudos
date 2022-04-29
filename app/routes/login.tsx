@@ -19,21 +19,24 @@ export const action: ActionFunction = async ({ request }) => {
   let firstName = form.get('firstName');
   let lastName = form.get('lastName');
 
+  // If not all data was passed, error
   if (
     typeof action !== 'string' ||
     typeof email !== 'string' ||
     typeof password !== 'string'
   ) {
-    return json({ error: 'Invalid form data', form: action }, { status: 400 });
+    return json({ error: `Invalid Form Data`, form: action }, { status: 400 });
   }
 
+  // If not all data was passed, error
   if (
     action === 'register' &&
     (typeof firstName !== 'string' || typeof lastName !== 'string')
   ) {
-    return json({ error: 'Invalid form data', form: action }, { status: 400 });
+    return json({ error: `Invalid Form Data`, form: action }, { status: 400 });
   }
 
+  // Validate email & password
   const fieldErrors = {
     email: validateEmail(email),
     password: validatePassword(password),
@@ -45,16 +48,12 @@ export const action: ActionFunction = async ({ request }) => {
       : {}),
   };
 
+  //  If there were any errors, return them
   if (Object.values(fieldErrors).some(Boolean)) {
     return json(
       {
         fieldErrors,
-        fields: {
-          email,
-          password,
-          firstName,
-          lastName,
-        },
+        fields: { email, password, firstName, lastName },
         form: action,
       },
       { status: 400 }
@@ -62,41 +61,38 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   switch (action) {
-    case 'login':
+    case 'login': {
       return await login({ email, password });
-
-    case 'register':
+    }
+    case 'register': {
       firstName = firstName as string;
       lastName = lastName as string;
       return await register({ email, password, firstName, lastName });
-
+    }
     default:
-      return json({ error: 'Invalid Form Data' }, { status: 400 });
+      return json({ error: `Invalid Form Data` }, { status: 400 });
   }
 };
 
 export default function Login() {
   const actionData = useActionData();
-  const [formError, setFormError] = useState(actionData?.error || '');
-  const [fieldErrors, setFieldErrors] = useState(actionData?.fieldErrors || {});
+  const firstLoad = useRef(true);
   const [action, setAction] = useState('login');
+  const [fieldErrors, setFieldErrors] = useState(actionData?.errors || {});
+  const [formError, setFormError] = useState(actionData?.error || '');
   const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    firstName: '',
-    lastName: '',
+    email: actionData?.fields?.email || '',
+    password: actionData?.fields?.password || '',
+    firstName: actionData?.fields?.lastName || '',
+    lastName: actionData?.fields?.firstName || '',
   });
 
-  const firstLoad = useRef(true);
-
+  // Updates the form data when an input changes
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
     field: string
   ) => {
-    setFormData((form) => ({
-      ...form,
-      [field]: event.target.value,
-    }));
+    setFormData((form) => ({ ...form, [field]: event.target.value }));
   };
 
   useEffect(() => {
@@ -128,27 +124,28 @@ export default function Login() {
   return (
     <Layout>
       <div className="h-full flex justify-center items-center flex-col gap-y-4">
+        {/* Form Switcher Button */}
         <button
-          onClick={() => setAction(action === 'login' ? 'register' : 'login')}
+          onClick={() => setAction(action == 'login' ? 'register' : 'login')}
           className="absolute top-8 right-8 rounded-xl bg-yellow-300 font-semibold text-blue-600 px-3 py-2 transition duration-300 ease-in-out hover:bg-yellow-400 hover:-translate-y-1"
         >
-          {action === 'login' ? 'Sign Up' : 'Login'}
+          {action === 'login' ? 'Sign Up' : 'Sign In'}
         </button>
 
         <h2 className="text-5xl font-extrabold text-yellow-300">
           Welcome to Kudos!
         </h2>
+
         <p className="font-semibold text-slate-300">
           {action === 'login'
             ? 'Log In To Give Some Praise!'
             : 'Sign Up To Get Started!'}
         </p>
 
-        <form method="post" className="rounded-2xl bg-gray-200 p-6 w-96">
+        <form method="POST" className="rounded-2xl bg-gray-200 p-6 w-96">
           <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
             {formError}
           </div>
-
           <FormField
             htmlFor="email"
             label="Email"
@@ -156,35 +153,35 @@ export default function Login() {
             onChange={(e) => handleInputChange(e, 'email')}
             error={fieldErrors?.email}
           />
-
           <FormField
             htmlFor="password"
-            label="Password"
             type="password"
+            label="Password"
             value={formData.password}
             onChange={(e) => handleInputChange(e, 'password')}
             error={fieldErrors?.password}
           />
 
-          {action !== 'login' ? (
+          {action === 'register' && (
             <>
+              {/* First Name */}
               <FormField
                 htmlFor="firstName"
                 label="First Name"
-                value={formData.firstName}
                 onChange={(e) => handleInputChange(e, 'firstName')}
+                value={formData.firstName}
                 error={fieldErrors?.firstName}
               />
-
+              {/* Last Name */}
               <FormField
                 htmlFor="lastName"
                 label="Last Name"
-                value={formData.lastName}
                 onChange={(e) => handleInputChange(e, 'lastName')}
+                value={formData.lastName}
                 error={fieldErrors?.lastName}
               />
             </>
-          ) : null}
+          )}
 
           <div className="w-full text-center">
             <button
