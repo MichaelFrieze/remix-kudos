@@ -8,6 +8,7 @@ import {
   validateName,
   validatePassword,
 } from '~/utils/validators.server';
+import { login, register } from '~/utils/auth.server';
 
 export const action: ActionFunction = async ({ request }) => {
   const form = await request.formData();
@@ -57,6 +58,19 @@ export const action: ActionFunction = async ({ request }) => {
       },
       { status: 400 }
     );
+  }
+
+  switch (action) {
+    case 'login':
+      return await login({ email, password });
+
+    case 'register':
+      firstName = firstName as string;
+      lastName = lastName as string;
+      return await register({ email, password, firstName, lastName });
+
+    default:
+      return json({ error: 'Invalid Form Data' }, { status: 400 });
   }
 };
 
