@@ -112,7 +112,7 @@ export default function Login() {
             : 'Sign Up To Get Started!'}
         </p>
 
-        <form className="rounded-2xl bg-gray-200 p-6 w-96">
+        <form method="post" className="rounded-2xl bg-gray-200 p-6 w-96">
           <FormField
             htmlFor="email"
             label="Email"
