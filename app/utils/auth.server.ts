@@ -1,4 +1,4 @@
-import { json, createCookieSessionStorage } from '@remix-run/node';
+import { json, createCookieSessionStorage, redirect } from '@remix-run/node';
 import { prisma } from './prisma.server';
 import type { RegisterForm, LoginForm } from './types.server';
 import { createUser } from './users.server';
@@ -51,7 +51,7 @@ export const register = async (form: RegisterForm) => {
     );
   }
 
-  return null;
+  return createUserSession(newUser.id, '/');
 };
 
 export const login = async (form: LoginForm) => {
@@ -68,5 +68,15 @@ export const login = async (form: LoginForm) => {
     );
   }
 
-  return null;
+  return createUserSession(user.id, '/');
+};
+
+export const createUserSession = async (userId: string, redirectTo: string) => {
+  const session = await storage.getSession();
+  session.set('userId', userId);
+  return redirect(redirectTo, {
+    headers: {
+      'Set-Cookie': await storage.commitSession(session),
+    },
+  });
 };

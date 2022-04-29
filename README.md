@@ -74,4 +74,4 @@ SESSION_SECRET=""
 ## Where I am at in the video:
 
 [Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=vR33ZRJekHk)
-40:46
+47:00
