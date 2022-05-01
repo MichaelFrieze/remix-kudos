@@ -23,6 +23,8 @@ export default function KudoModal() {
     message: '',
   });
 
+  console.log(recipient);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
     field: string
