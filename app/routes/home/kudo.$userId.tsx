@@ -7,17 +7,20 @@ import { UserCircle } from '~/components/user-circle';
 import { useState } from 'react';
 import { colorMap, emojiMap, backgroundColorMap } from '~/utils/constants';
 import { SelectBox } from '~/components/select-box';
-import { KudoStyle } from '@prisma/client';
+import type { KudoStyle } from '@prisma/client';
+import { Kudo } from '~/components/kudo';
+import { getUser } from '~/utils/auth.server';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { userId } = params;
+  const user = await getUser(request);
+
   if (typeof userId !== 'string') {
     return redirect('/home');
   }
 
   const recipient = await getUserById(userId);
-
-  return json({ recipient });
+  return json({ recipient, user });
 };
 
 export default function KudoModal() {
@@ -62,7 +65,7 @@ export default function KudoModal() {
   const colors = getOptions(colorMap);
   const emojis = getOptions(emojiMap);
 
-  const { recipient } = useLoaderData();
+  const { recipient, user } = useLoaderData();
 
   return (
     <Modal isOpen={true} className="w-2/3 p-10">
@@ -123,7 +126,7 @@ export default function KudoModal() {
         <br />
         <p className="text-blue-600 font-semibold mb-2">Preview</p>
         <div className="flex flex-col items-center md:flex-row gap-x-24 gap-y-2 md:gap-y-0">
-          {/* The Preview Goes Here */}
+          <Kudo profile={user.profile} kudo={formData} />
           <div className="flex-1" />
           <button
             type="submit"
