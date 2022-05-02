@@ -5,9 +5,10 @@ import { requireUserId } from '~/utils/auth.server';
 import { Layout } from '~/components/layout';
 import { UserPanel } from '~/components/user-panel';
 import { getOtherUsers } from '~/utils/user.server';
-import { getFilteredKudos } from '~/utils/kudos.server';
+import { getFilteredKudos, getRecentKudos } from '~/utils/kudos.server';
 import { Kudo } from '~/components/kudo';
 import type { Profile, Kudo as IKudo } from '@prisma/client';
+import { RecentBar } from '~/components/recent-bar';
 
 interface KudoWithAuthor extends IKudo {
   author: {
@@ -21,11 +22,13 @@ export const loader: LoaderFunction = async ({ request }) => {
 
   const kudos = await getFilteredKudos(userId, {}, {});
 
-  return json({ users, kudos });
+  const recentKudos = await getRecentKudos();
+
+  return json({ users, kudos, recentKudos });
 };
 
 export default function Home() {
-  const { users, kudos } = useLoaderData();
+  const { users, kudos, recentKudos } = useLoaderData();
 
   return (
     <Layout>
@@ -40,7 +43,7 @@ export default function Home() {
                 <Kudo key={kudo.id} kudo={kudo} profile={kudo.author.profile} />
               ))}
             </div>
-            {/* recent kudo's */}
+            <RecentBar kudos={recentKudos} />
           </div>
         </div>
       </div>
