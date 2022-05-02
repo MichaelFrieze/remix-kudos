@@ -1,5 +1,5 @@
-import { prisma } from "./prisma.server";
-import { KudoStyle, Prisma } from "@prisma/client";
+import { prisma } from './prisma.server';
+import type { KudoStyle, Prisma } from '@prisma/client';
 
 export const createKudo = async (
   message: string,
@@ -55,7 +55,7 @@ export const getRecentKudos = async () => {
   return await prisma.kudo.findMany({
     take: 3,
     orderBy: {
-      createdAt: "desc",
+      createdAt: 'desc',
     },
     select: {
       style: {
