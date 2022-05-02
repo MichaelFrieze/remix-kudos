@@ -73,5 +73,5 @@ SESSION_SECRET=""
 
 ## Where I am at in the video:
 
-[Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=Mx9Xsq9JNXo)
+[Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=ojatNgYa7Nw)
 24:00
