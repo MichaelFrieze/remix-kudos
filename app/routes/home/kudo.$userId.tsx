@@ -5,6 +5,7 @@ import { getUserById } from '~/utils/user.server';
 import { useLoaderData } from '@remix-run/react';
 import { UserCircle } from '~/components/user-circle';
 import { useState } from 'react';
+import { colorMap, emojiMap, backgroundColorMap } from '~/utils/constants';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
   const { userId } = params;
@@ -18,12 +19,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default function KudoModal() {
-  const { recipient } = useLoaderData();
   const [formData, setFormData] = useState({
     message: '',
   });
-
-  console.log(recipient);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -31,6 +29,20 @@ export default function KudoModal() {
   ) => {
     setFormData((form) => ({ ...form, [field]: e.target.value }));
   };
+
+  const getOptions = (data: any) =>
+    Object.keys(data).reduce((acc: any[], curr) => {
+      acc.push({
+        name: curr.charAt(0).toUpperCase() + curr.slice(1).toLowerCase(),
+        value: curr,
+      });
+      return acc;
+    }, []);
+
+  const colors = getOptions(colorMap);
+  const emojis = getOptions(emojiMap);
+
+  const { recipient } = useLoaderData();
 
   return (
     <Modal isOpen={true} className="w-2/3 p-10">
