@@ -41,7 +41,8 @@ This command is used for initial Prisma setup:
 npx prisma init --datasource-provider mongodb
 ```
 
-This is used to synchronize the Prisma schema with the database schema for prototyping:
+This is used to synchronize the Prisma schema with the database schema for prototyping.
+Also, for initial setup, this is the command that should be used after `.env` and `npm install`:
 
 ```bash
 npx prisma db push
