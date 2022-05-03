@@ -69,9 +69,14 @@ DATABASE_URL=""
 
 # This can be anything you want
 SESSION_SECRET=""
+
+# AWS S3 details
+KUDOS_S3_ACCESS_KEY_ID=""
+KUDOS_S3_SECRET_ACCESS_KEY=""
+KUDOS_S3_BUCKET_NAME=""
+KUDOS_S3_BUCKET_REGION=""
 ```
 
-## Where I am at in the video:
+## URL to tutorial video on Prisma's YouTube channel
 
-[Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=ojatNgYa7Nw)
-37:00
+[Build A Fullstack App with Remix, Prisma & MongoDB](https://www.youtube.com/watch?v=4tXGRe5CDDg)
