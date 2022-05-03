@@ -1,11 +1,11 @@
-export interface RegisterForm {
+export type RegisterForm = {
   email: string;
   password: string;
   firstName: string;
   lastName: string;
-}
+};
 
-export interface LoginForm {
+export type LoginForm = {
   email: string;
   password: string;
-}
+};

@@ -42,7 +42,7 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   // Validate email & password
-  const fieldErrors = {
+  const errors = {
     email: validateEmail(email),
     password: validatePassword(password),
     ...(action === 'register'
@@ -54,16 +54,15 @@ export const action: ActionFunction = async ({ request }) => {
   };
 
   //  If there were any errors, return them
-  if (Object.values(fieldErrors).some(Boolean)) {
+  if (Object.values(errors).some(Boolean))
     return json(
       {
-        fieldErrors,
+        errors,
         fields: { email, password, firstName, lastName },
         form: action,
       },
       { status: 400 }
     );
-  }
 
   switch (action) {
     case 'login': {
@@ -83,7 +82,7 @@ export default function Login() {
   const actionData = useActionData();
   const firstLoad = useRef(true);
   const [action, setAction] = useState('login');
-  const [fieldErrors, setFieldErrors] = useState(actionData?.fieldErrors || {});
+  const [errors, setErrors] = useState(actionData?.errors || {});
   const [formError, setFormError] = useState(actionData?.error || '');
   const [formData, setFormData] = useState({
     email: actionData?.fields?.email || '',
@@ -109,7 +108,7 @@ export default function Login() {
         firstName: '',
         lastName: '',
       };
-      setFieldErrors(newState);
+      setErrors(newState);
       setFormError('');
       setFormData(newState);
     }
@@ -128,7 +127,7 @@ export default function Login() {
 
   return (
     <Layout>
-      <div className="h-full flex justify-center items-center flex-col gap-y-4">
+      <div className="h-full justify-center items-center flex flex-col gap-y-4">
         {/* Form Switcher Button */}
         <button
           onClick={() => setAction(action == 'login' ? 'register' : 'login')}
@@ -140,13 +139,11 @@ export default function Login() {
         <h2 className="text-5xl font-extrabold text-yellow-300">
           Welcome to Kudos!
         </h2>
-
         <p className="font-semibold text-slate-300">
           {action === 'login'
             ? 'Log In To Give Some Praise!'
             : 'Sign Up To Get Started!'}
         </p>
-
         <form method="POST" className="rounded-2xl bg-gray-200 p-6 w-96">
           <div className="text-xs font-semibold text-center tracking-wide text-red-500 w-full">
             {formError}
@@ -156,7 +153,7 @@ export default function Login() {
             label="Email"
             value={formData.email}
             onChange={(e) => handleInputChange(e, 'email')}
-            error={fieldErrors?.email}
+            error={errors?.email}
           />
           <FormField
             htmlFor="password"
@@ -164,7 +161,7 @@ export default function Login() {
             label="Password"
             value={formData.password}
             onChange={(e) => handleInputChange(e, 'password')}
-            error={fieldErrors?.password}
+            error={errors?.password}
           />
 
           {action === 'register' && (
@@ -175,7 +172,7 @@ export default function Login() {
                 label="First Name"
                 onChange={(e) => handleInputChange(e, 'firstName')}
                 value={formData.firstName}
-                error={fieldErrors?.firstName}
+                error={errors?.firstName}
               />
               {/* Last Name */}
               <FormField
@@ -183,7 +180,7 @@ export default function Login() {
                 label="Last Name"
                 onChange={(e) => handleInputChange(e, 'lastName')}
                 value={formData.lastName}
-                error={fieldErrors?.lastName}
+                error={errors?.lastName}
               />
             </>
           )}
