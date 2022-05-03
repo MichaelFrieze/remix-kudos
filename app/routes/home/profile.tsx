@@ -10,6 +10,7 @@ import type { ActionFunction } from '@remix-run/node';
 import { redirect, json } from '@remix-run/node';
 import { getUser, requireUserId, logout } from '~/utils/auth.server';
 import type { Department } from '@prisma/client';
+import { ImageUploader } from '~/components/image-uploader';
 import { updateUser, deleteUser } from '~/utils/user.server';
 
 export const action: ActionFunction = async ({ request }) => {
@@ -120,7 +121,12 @@ export default function ProfileSettings() {
           {formError}
         </div>
         <div className="flex">
-          <div className="w-1/3">{/* image uploader goes here */}</div>
+          <div className="w-1/3">
+            <ImageUploader
+              onChange={handleFileUpload}
+              imageUrl={formData.profilePicture || ''}
+            />
+          </div>
           <div className="flex-1">
             <form
               method="post"
