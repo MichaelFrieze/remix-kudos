@@ -1,3 +1,6 @@
+To view this app deployed on Vercel:
+https://remix-kudos.vercel.app/
+
 # Welcome to Remix!
 
 - [Remix Docs](https://remix.run/docs)
